@@ -95,5 +95,25 @@ Date | Time | String
 2017-05-12|12:04:30|2017-05-10 14:04 +2 days +2 seconds 12:04
 2017-07-10|04:00:02|1 day +1 week +2 days +4 hours +2 seconds
 
+### Installation
+
+**Static:**  
+Add to your Project file:
+```qmake
+include(HumanDateTimeParser.pri)
+```
+**Dynamic:**  
+```
+qmake HumanDateTimeParser.pro
+make
+make install
+```
+add the following to your pro file:
+```qmake
+LIBS += -lHumanDateTimeParser
+```
+</details>
+
+
 ### Licence
 The [humandatetimeparser licence](https://github.com/Spiek/humandatetimeparser/blob/master/LICENCE) is a modified version of the [LGPL](http://www.gnu.org/licenses/lgpl.html) licence, with a static linking exception.
