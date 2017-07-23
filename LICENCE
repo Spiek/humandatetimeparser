@@ -1,17 +1,17 @@
 License
 
-redust is released under version 3 of the GNU Lesser Public License (LGPL, available http://www.gnu.org/copyleft/lgpl.html),
+humandatetimeparser is released under version 3 of the GNU Lesser Public License (LGPL, available http://www.gnu.org/copyleft/lgpl.html),
 with an exeption related to static linking exception (see below).
 
 This basically means that you can get the full source code for nothing, so long as you adhere to a few rules.
 
-Under the LGPL you may use redust for any purpose you wish, and modify it if you require, as long as you:
+Under the LGPL you may use humandatetimeparser for any purpose you wish, and modify it if you require, as long as you:
 
-Pass on the (modified) redust source code with your software, with original copyrights intact
+Pass on the (modified) humandatetimeparser source code with your software, with original copyrights intact
 Make it clear where you have customised it.
 The above is a precis, please do read the full license agreement.
 
-In addition to the LGPL license text, the exception to the LGPL conditions apply to redust:
+In addition to the LGPL license text, the exception to the LGPL conditions apply to humandatetimeparser:
 
 As a special exception to the GNU Lesser General Public License version 3,
 you may convey to a third party an executable file from a Combined Work
