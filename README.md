@@ -72,7 +72,9 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 ```
+
 Prints following results:
+
 Date | Time | String
 :-------- | :------- | :-------
 2017-07-23|19:10:28|now
