@@ -4,7 +4,6 @@
 #include <QDateTime>
 #include <QString>
 #include <QMap>
-#include <QRegularExpression>
 
 class HumanDateTimeParser
 {
@@ -18,48 +17,22 @@ class HumanDateTimeParser
             Undefined,
 
             // fix times
-            Now,
-            Yesterday,
-            Tomorrow,
+            Now, Yesterday, Tomorrow,
 
             // control
             Skip,
 
             // ranges
-            Next,
-            Last,
+            Next, Last,
 
             // date parts
-            Year,
-            Month,
-            Week,
-            Day,
-            Hour,
-            Minute,
-            Second,
+            Year, Month, Week, Day, Hour, Minute, Second,
 
             // weekdays
-            Monday,
-            Tuesday,
-            Wednesday,
-            Thursday,
-            Friday,
-            Saturday,
-            Sunday,
+            Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday,
 
             // months
-            January,
-            Februrary,
-            March,
-            April,
-            May,
-            June,
-            July,
-            August,
-            September,
-            October,
-            November,
-            December
+            January, Februrary, March, April, May, June, July, August, September, October, November, December
         };
 
         static QMap<QString, ElementType> elementAliases;
