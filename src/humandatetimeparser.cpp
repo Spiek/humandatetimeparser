@@ -31,6 +31,7 @@ QDateTime HumanDateTimeParser::parse(QString humanDateTime, QDateTime base)
                 if(timeFormat) {
                     QTime time = QTime::fromString(element, format);
                     if(!time.isNull()) {
+                        if(!format.contains("s")) time.setHMS(time.hour(), time.minute(), base.time().second());
                         base.setTime(time);
                         break;
                     }
@@ -40,6 +41,7 @@ QDateTime HumanDateTimeParser::parse(QString humanDateTime, QDateTime base)
                 else {
                     QDate date = QDate::fromString(element, format);
                     if(!date.isNull()) {
+                        if(!format.contains("y")) date.setDate(base.date().year(), date.month(), date.day());
                         base.setDate(date);
                         break;
                     }
@@ -49,13 +51,16 @@ QDateTime HumanDateTimeParser::parse(QString humanDateTime, QDateTime base)
         }
 
         // Parse Error
-        if(type == ElementType::Undefined || (type == ElementType::Skip && dateTimeParts.isEmpty())) return QDateTime();
+        if(type == ElementType::Undefined) return QDateTime();
 
         // parse: Now
         if(type == ElementType::Now) return QDateTime::currentDateTime();
 
-        // skip entry (without error!)
-        if(type == ElementType::Skip) continue;
+        // add a plus to next entry
+        if(type == ElementType::PlusAlias) {
+            dateTimeParts.first().prepend("+");
+            continue;
+        }
 
         // parse: next|last {Element}
         if((type == ElementType::Next || type == ElementType::Last) && !dateTimeParts.isEmpty()) {
@@ -92,29 +97,47 @@ QDateTime HumanDateTimeParser::parse(QString humanDateTime, QDateTime base)
         }
 
         // parse: [+|-][offset] {Day,Week...}
-        if(isInt && type >= ElementType::Year && type <= ElementType::Second)
+        if(type >= ElementType::Year && type <= ElementType::Second)
         {
-            // parse datetime types
-            if(type == ElementType::Week) {
-                base = base.addDays(intNumber * 7);
-            } else if(relativeTime || !relativeTimeReset) {
+            // set number if not present
+            if(!isInt) intNumber = 1;
+
+            // parse: {+|-}[offset] {Day,Week...}
+            if(relativeTime || !relativeTimeReset) {
                 if(type == ElementType::Year)   base = base.addYears(intNumber);
                 if(type == ElementType::Month)  base = base.addMonths(intNumber);
                 if(type == ElementType::Day)    base = base.addDays(intNumber);
+                if(type == ElementType::Week)   base = base.addDays(intNumber * 7);
                 if(type == ElementType::Hour)   base = base.addSecs(intNumber * 3600);
                 if(type == ElementType::Minute) base = base.addSecs(intNumber * 60);
                 if(type == ElementType::Second) base = base.addSecs(intNumber);
-            } else if(relativeTimeReset) {
+            }
+
+            // parse: {offset} {Day,Week...}
+            else if(relativeTimeReset) {
                 if(type == ElementType::Year)   base = QDateTime(QDate(intNumber < 100 ? 2000 + intNumber : intNumber, 1, 1), QTime());
                 if(type == ElementType::Month)  base = QDateTime(QDate(base.date().year(), intNumber, 1), QTime());
                 if(type == ElementType::Day)    base = QDateTime(QDate(base.date().year(), base.date().month(), intNumber), QTime());
+                if(type == ElementType::Week)   {
+                    int days = intNumber == 1 ?  isInt :
+                               intNumber  < 0 ? -1 :
+                               intNumber  > 1 ?  1 : 0;
+                    base = base.addDays(-(base.date().dayOfWeek() - 1) + (days * 7));
+                    base.setTime(QTime());
+                }
                 if(type == ElementType::Hour)   base.setTime(QTime(intNumber, 0, 0));
                 if(type == ElementType::Minute) base.setTime(QTime(base.time().hour(), intNumber, 0));
                 if(type == ElementType::Second) base.setTime(QTime(base.time().hour(), base.time().minute(), intNumber));
             }
+
+            // parse fix value: [offset] {Day,Week...} (reset lower types)
             if(!relativeTimeReset) {
                 if(type == ElementType::Year)   base = QDateTime(QDate(base.date().year(), 1, 1), QTime());
                 if(type == ElementType::Month)  base = QDateTime(QDate(base.date().year(), base.date().month(), 1), QTime());
+                if(type == ElementType::Week)   {
+                    base = base.addDays((7 - base.date().dayOfWeek()) + 1 + ((intNumber - intNumber < 0 ? 1 : -1) * 7));
+                    base.setTime(QTime());
+                }
                 if(type == ElementType::Day)    base = QDateTime(QDate(base.date().year(), base.date().month(), base.date().day()), QTime());
                 if(type == ElementType::Hour)   base.setTime(QTime(base.time().hour(), 0, 0));
                 if(type == ElementType::Minute) base.setTime(QTime(base.time().hour(), base.time().minute(), 0));

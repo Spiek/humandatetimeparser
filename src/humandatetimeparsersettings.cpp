@@ -4,15 +4,20 @@
 #include "humandatetimeparser.h"
 
 QList<QString> HumanDateTimeParser::dateFormats = {
-    // english formats
+    // YMD-Format (english)
     {"yyyy-MM-dd"},
     {"yy-MM-dd"},
     {"MM-dd"},
 
-    // german formats
+    // DMY-Format (german)
     {"dd.MM.yyyy"},
     {"dd.MM.yy"},
     {"dd.MM"},
+
+    // MDY-Format
+    {"MM/dd/yyyy"},
+    {"MM/dd/yy"},
+    {"MM/dd"},
 };
 
 QList<QString> HumanDateTimeParser::timeFormats = {
@@ -30,7 +35,7 @@ QMap<QString, HumanDateTimeParser::ElementType> HumanDateTimeParser::elementAlia
     {"now",         HumanDateTimeParser::ElementType::Now},
     {"yesterday",   HumanDateTimeParser::ElementType::Yesterday},
     {"tomorrow",    HumanDateTimeParser::ElementType::Tomorrow},
-    {"in",          HumanDateTimeParser::ElementType::Skip},
+    {"in",          HumanDateTimeParser::ElementType::PlusAlias},
     {"next",        HumanDateTimeParser::ElementType::Next},
     {"last",        HumanDateTimeParser::ElementType::Last},
 

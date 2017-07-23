@@ -20,7 +20,7 @@ class HumanDateTimeParser
             Now, Yesterday, Tomorrow,
 
             // control
-            Skip,
+            PlusAlias,
 
             // ranges
             Next, Last,
