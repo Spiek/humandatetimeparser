@@ -1,30 +1,43 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include "humandatetimeparser.h"
-#include <QElapsedTimer>
+
+#define PrettyPrint(a,datetime) qDebug("%s %s", qPrintable(HumanDateTimeParser::parse(a, currentDateTime).toString("yyyy-MM-dd hh:mm:ss")), a)
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-	// init human date time parser
-    HumanDateTimeParser::parse("next day");
+    // get current time
+    QDateTime currentDateTime = QDateTime::currentDateTime();
 
-    QElapsedTimer timer;
-    timer.start();
+    PrettyPrint("now", currentDateTime);
+    PrettyPrint("yesterday", currentDateTime);
+    PrettyPrint("tomorrow", currentDateTime);
 
-    qint64 elaspedSum = 0;
-    for(QString& element : QList<QString>{{"next day"}, {"now"},{"10 September 2000"},{"+1 day"},{"+1 week"},{"+1 week +2 days +4 hours +2 seconds"},{"next Thursday"},{"last Monday"}, {"tomorrow"}})
-    {
-        QElapsedTimer timersub;
-        timersub.start();
-        QDateTime time = HumanDateTimeParser::parse(element);
-        qint64 elasped = timersub.nsecsElapsed();
-        elaspedSum += elasped;
-        qDebug("%7lld %s %s", timersub.nsecsElapsed(), qPrintable(time.toString("yyyy-MM-dd hh:mm:ss")), qPrintable(element));
-    }
-    qDebug("%7lld Elapsed", elaspedSum);
+    // week related
+    PrettyPrint("week", currentDateTime);
+    PrettyPrint("-1 week", currentDateTime);
+    PrettyPrint("1 week", currentDateTime);
+    PrettyPrint("last week", currentDateTime);
+    PrettyPrint("next saturday", currentDateTime);
+    PrettyPrint("last Thursday", currentDateTime);
 
+    // relative
+    PrettyPrint("day", currentDateTime);
+    PrettyPrint("1 year", currentDateTime);
+    PrettyPrint("+1 month", currentDateTime);
+    PrettyPrint("-1 day", currentDateTime);
+    PrettyPrint("next year", currentDateTime);
+
+    // fix
+    PrettyPrint("10 September 2000", currentDateTime);
+    PrettyPrint("10.05.2017", currentDateTime);
+    PrettyPrint("2017-05-10 14:04", currentDateTime);
+
+    // chain
+    PrettyPrint("2017-05-10 14:04 +2 days +2 seconds 12:04", currentDateTime);
+    PrettyPrint("1 day +1 week +2 days +4 hours +2 seconds", currentDateTime);
 
     return a.exec();
 }
